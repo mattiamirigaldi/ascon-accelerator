@@ -3,7 +3,8 @@
 module sub_layer_lut(
     input   logic           clk,
     input   logic           rst_n,
-    input   logic           upd_sbox,
+    input   logic           upd_sbox_i,
+    input  logic [4:0]     sbox_addr_i,
     input   logic [20:0]    sbox_new_data_i,
     input   logic [63:0]    x0_i,
     input   logic [63:0]    x1_i,
@@ -23,8 +24,9 @@ module sub_layer_lut(
             sbox_ascon sbox_inst(
                 .clk           (clk),
                 .rst_n         (rst_n),
-                .update_i      (upd_sbox),
-                .addr_i        ({x0_i[i], x1_i[i], x2_i[i], x3_i[i], x4_i[i]}),
+                .update_i      (upd_sbox_i),
+                .addr_i        (upd_sbox_i ? sbox_addr_i :
+                               {x0_i[i], x1_i[i], x2_i[i], x3_i[i], x4_i[i]}),
                 .data_i        (sbox_new_data_i),
                 .data_o        ({x0_o[i], x1_o[i], x2_o[i], x3_o[i], x4_o[i]})
             );

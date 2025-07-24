@@ -1,7 +1,7 @@
 # This file is public domain, it can be freely copied without restrictions.
 # SPDX-License-Identifier: CC0-1.0
 
-MAKEFLAGS=-j8
+MAKEFLAGS=-j1
 
 # The following variants require "CCW = 32" in test.py:
 VARIANT = V1

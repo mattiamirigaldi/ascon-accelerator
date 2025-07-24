@@ -10,11 +10,13 @@
 // Performs UROL rounds per clock cycle.
 
 `include "config.sv"
+`include "sub_layer_lut.sv"
 
 module asconp_lut (
     input  logic        clk,
     input  logic        rst_n,
-    input  logic        upd_sbox,
+    input  logic        upd_sbox_i,
+    input  logic [4:0]  sbox_addr_i,
     input  logic [20:0] sbox_new_data_i,
     input  logic [ 3:0] round_cnt,
     input  logic [63:0] x0_i,
@@ -55,10 +57,11 @@ module asconp_lut (
       assign x3_const_add[i] = x3[i];
       assign x4_const_add[i] = x4[i];
 
-      sub_layer_lut sub_layer_inst(
+      sub_layer_lut sub_layer_inst (
           .clk     (clk),
           .rst_n   (rst_n),
-          .upd_sbox(upd_sbox),
+          .upd_sbox_i(upd_sbox_i),
+          .sbox_addr_i(sbox_addr_i),
           .sbox_new_data_i(sbox_new_data_i),
           .x0_i   (x0_const_add),
           .x1_i   (x1_const_add),

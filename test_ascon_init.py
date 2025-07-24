@@ -2,7 +2,7 @@ import cocotb
 from cocotb.triggers import RisingEdge
 from cocotb.clock import Clock
 
-from operations_init import ascon_init as ascon  # type: ignore
+from operations_init import ascon_init
 
 VERBOSE = 1
 

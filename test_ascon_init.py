@@ -25,7 +25,8 @@ def int_to_320bv(words: list[int]) -> int:
 async def clear_ascon_init(dut):
     dut.rst_n.value = 0
     dut.start_i.value = 0
-    dut.upd_sbox.value = 0
+    dut.upd_sbox_i.value = 0
+    dut.sbox_addr_i.value = 0
     dut.sbox_new_data_i.value = 0
     dut.state_i.value = [0] * 320 # 5 * 64 bits
     await RisingEdge(dut.clk)

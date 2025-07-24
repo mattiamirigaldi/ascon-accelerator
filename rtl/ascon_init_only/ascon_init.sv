@@ -28,7 +28,7 @@ assign round_inc = round + 1;
 asconp_lut asconp_i (
     .clk   (clk),
     .rst_n (rst_n),
-    .upd_sbox_i        (upd_sbox_i),
+    .upd_sbox_i (upd_sbox_i),
     .sbox_addr_i (sbox_addr_i),
     .sbox_new_data_i (sbox_new_data_i),
     .round_cnt       (round),

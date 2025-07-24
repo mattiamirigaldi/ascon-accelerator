@@ -25,10 +25,10 @@ EXTRA_ARGS += -Wno-UNOPTFLAT
 EXTRA_ARGS += -D$(VARIANT)
 
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
-TOPLEVEL = ascon_core
+TOPLEVEL = ascon_init
 
 # MODULE is the basename of the Python test file
-MODULE = test
+MODULE = test_ascon_init
 
 # Set source and config files
 ifeq (1,$(syn))
@@ -36,7 +36,7 @@ SURFER_RON = surfer/syn.ron
 VERILOG_SOURCES = $(PWD)/syn/cmos_cells.v $(PWD)/syn.v
 else
 SURFER_RON = surfer/sim.ron
-VERILOG_SOURCES = $(PWD)/rtl/ascon_core.sv
+VERILOG_SOURCES = $(PWD)/rtl/ascon_init_only/ascon_init.sv
 endif
 
 # Include cocotb makefile

@@ -1,12 +1,12 @@
 module ascon_init (
-    input  logic             clk,
-    input  logic             rst_n,
-    input  logic       [4:0][63:0] state_i,
-    input  logic             start_i,
-    input  logic             upd_sbox,
-    input  logic       [20:0] sbox_new_data_i,
-    output logic             busy_o,
-    output logic       [4:0][63:0] state_o
+    input  logic                    clk,
+    input  logic                    rst_n,
+    input  logic       [4:0][63:0]  state_i,
+    input  logic                    start_i,
+    input  logic                    upd_sbox,
+    input  logic       [20:0]       sbox_new_data_i,
+    output logic                    busy_o,
+    output logic       [4:0][63:0]  state_o
 );
 
 typedef logic [63:0] word_t;

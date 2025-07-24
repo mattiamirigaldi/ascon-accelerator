@@ -5,7 +5,7 @@ module sub_layer_lut(
     input   logic           rst_n,
     input   logic           upd_sbox_i,
     input  logic [4:0]     sbox_addr_i,
-    input   logic [20:0]    sbox_new_data_i,
+    input   logic [19:0]    sbox_new_data_i,
     input   logic [63:0]    x0_i,
     input   logic [63:0]    x1_i,
     input   logic [63:0]    x2_i,

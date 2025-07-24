@@ -45,11 +45,11 @@ module sbox_ascon #(
 
     // Combinational read
     always_comb begin
-        row_e row_sel = addr_i[4:2];
-        col_e col_sel = addr_i[1:0];
+        row_e row_sel = row_e'(addr_i[4:2]);
+        col_e col_sel = col_e'(addr_i[1:0]);
 
         // variable-part select :    [base +: width]
-        data_o = lut[row_sel][col_sel*COL_W +: COL_W];
+        data_o = sbox_lut[row_sel][col_sel*COL_W +: COL_W];
     end
 
 endmodule

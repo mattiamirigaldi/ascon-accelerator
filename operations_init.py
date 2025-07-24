@@ -21,8 +21,23 @@ def ascon_initialize(S, k, rate, a, b, key, nonce, mode):
     iv_zero_key_nonce = to_bytes([k, rate * 8, a, b]) + zero_bytes(20-len(key)) + key + nonce
     S[0], S[1], S[2], S[3], S[4] = bytes_to_state(iv_zero_key_nonce)
 
+    # Print initial state in hexadecimal
+    print("Initial state:")
+    print(f"S[0] = 0x{S[0]:016x}")
+    print(f"S[1] = 0x{S[1]:016x}")
+    print(f"S[2] = 0x{S[2]:016x}")
+    print(f"S[3] = 0x{S[3]:016x}")
+    print(f"S[4] = 0x{S[4]:016x}")
+
     for i in range(0,a):
         permutation(S, i, mode)
+        # Print state in hexadecimal
+        print("State after round", i+1)
+        print(f"S[0] = 0x{S[0]:016x}")
+        print(f"S[1] = 0x{S[1]:016x}")
+        print(f"S[2] = 0x{S[2]:016x}")
+        print(f"S[3] = 0x{S[3]:016x}")
+        print(f"S[4] = 0x{S[4]:016x}")
 
     state += int_to_bytes(S[0], 8) + int_to_bytes(S[1], 8) + int_to_bytes(S[2], 8) + int_to_bytes(S[3], 8) + int_to_bytes(S[4], 8) 
 
@@ -32,7 +47,7 @@ def ascon_initialize(S, k, rate, a, b, key, nonce, mode):
 def permutation(S, r, mode="hw"):
     # --- constant addition ---
     S[2] ^= (0xf0 - r*0x10 + r*0x1)
-
+    print(f"S[2] after round const addition = 0x{S[2]:016x}")
     # --- substitution layer ---
     if mode == "hw" :
         S[0] ^= S[4]
@@ -62,13 +77,25 @@ def permutation(S, r, mode="hw"):
     else:
         print("Error")
 
+    print("State after substitution layer:")
+    print(f"S[0] = 0x{S[0]:016x}")
+    print(f"S[1] = 0x{S[1]:016x}")
+    print(f"S[2] = 0x{S[2]:016x}")
+    print(f"S[3] = 0x{S[3]:016x}")
+    print(f"S[4] = 0x{S[4]:016x}")
+    
     # --- linear diffusion layer ---
     S[0] ^= rotr(S[0], 19) ^ rotr(S[0], 28)
     S[1] ^= rotr(S[1], 61) ^ rotr(S[1], 39)
     S[2] ^= rotr(S[2],  1) ^ rotr(S[2],  6)
     S[3] ^= rotr(S[3], 10) ^ rotr(S[3], 17)
     S[4] ^= rotr(S[4],  7) ^ rotr(S[4], 41)
-
+    print("State after linear diffusion layer:")
+    print(f"S[0] = 0x{S[0]:016x}")  
+    print(f"S[1] = 0x{S[1]:016x}")
+    print(f"S[2] = 0x{S[2]:016x}")
+    print(f"S[3] = 0x{S[3]:016x}")
+    print(f"S[4] = 0x{S[4]:016x}")
 
 def substitution_layer(S, sbox_type):
     S0_bin_out = []

@@ -7,7 +7,7 @@ from operations_init import ascon_init
 VERBOSE = 1
 
 KEY   = bytes.fromhex("000102030405060708090A0B0C0D0E0F")
-NONCE = bytes.fromhex("000102030405060708090A0B0C0D0E0F")
+NONCE = bytes.fromhex("00112233445566778899AABBCCDDEEFF")
 
 def five_words_to_int(state_bytes: bytes) -> list[int]:
     # convert 40 bytes to five 64-bit integers [S0, S1, S2, S3, S4] 
@@ -48,6 +48,7 @@ async def send_state(dut, words):
     dut.start_i.value = 1
     await RisingEdge(dut.clk)
     dut.start_i.value = 0  # drop the pulse
+    await RisingEdge(dut.clk)   
 
 async def receive_state(dut):
     while int(dut.busy_o.value):
@@ -86,11 +87,14 @@ async def test_init(dut):
     # -------- SW reference ----------
     # ascon_init returns the output state laid out as 40 bytes which corresponds to S0[63:0] ‖ S1[63:0] ‖ S2[63:0] ‖ S3[63:0] ‖ S4[63:0]
     result_sw_bytes = ascon_init(KEY, NONCE, "Ascon-128", "lut_ascon")
+    
+    print("result_sw_bytes repr:", repr(result_sw_bytes))
+
     result_sw_words = five_words_to_int(result_sw_bytes)
 
     # -------- HW -----------
     await send_state(dut, five_words_to_int(
-        bytes([0x80, 0x00, 0x0c, 0x08]) + b"\x00"*12 + KEY + NONCE))  # IV||0^12||key||nonce
+        bytes([0x80, 0x40, 0x0c, 0x06]) + b"\x00"*4 + KEY + NONCE))  # IV||0^12||key||nonce
     result_hw_words = await receive_state(dut)
 
     log(dut, verbose=1, dashes=1)

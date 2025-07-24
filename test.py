@@ -38,6 +38,11 @@ async def clear_bdi(dut):
     dut.bdi_eoi.value = 0
     dut.bdo_ready.value = 0
 
+# Keep programmable S-box idle
+async def clear_sbox_upd(dut):
+    dut.upd_sbox.value        = 0
+    dut.sbox_new_data_i.value = 0
+
 
 # Send data of specific type to dut
 async def send_data(dut, data_in, bdi_type, bdo_ready, bdi_eoi):
@@ -182,7 +187,8 @@ async def test_enc(dut):
     cocotb.start_soon(clock.start(start_high=False))
     await cocotb.start(toggle(dut, "dut.rst", 1))
     await RisingEdge(dut.clk)
-
+    await clear_sbox_upd(dut)
+    
     key = bytearray([random.randint(0, 255) for x in range(16)])
     npub = bytearray([random.randint(0, 255) for x in range(16)])
 
@@ -251,6 +257,7 @@ async def test_dec(dut):
     await cocotb.start(toggle(dut, "dut.rst", 1))
     await RisingEdge(dut.clk)
 
+    await clear_sbox_upd(dut)
     key = bytearray([random.randint(0, 255) for x in range(16)])
     npub = bytearray([random.randint(0, 255) for x in range(16)])
 
@@ -317,6 +324,7 @@ async def test_hash(dut):
     await cocotb.start(toggle(dut, "dut.rst", 1))
     await RisingEdge(dut.clk)
 
+    await clear_sbox_upd(dut)
     log(dut, verbose=1, dashes=1)
 
     for msglen in RUNS:
@@ -373,7 +381,8 @@ async def test_xof(dut):
     cocotb.start_soon(clock.start(start_high=False))
     await cocotb.start(toggle(dut, "dut.rst", 1))
     await RisingEdge(dut.clk)
-
+    
+    await clear_sbox_upd(dut)
     log(dut, verbose=1, dashes=1)
 
     for msglen in RUNS:
@@ -432,7 +441,8 @@ async def test_cxof(dut):
     cocotb.start_soon(clock.start(start_high=False))
     await cocotb.start(toggle(dut, "dut.rst", 1))
     await RisingEdge(dut.clk)
-
+    
+    await clear_sbox_upd(dut)
     log(dut, verbose=1, dashes=1)
 
     for msglen in RUNS:

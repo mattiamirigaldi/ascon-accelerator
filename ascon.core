@@ -1,0 +1,48 @@
+CAPI=2:
+
+name: "vlsi:polito:ascon"
+description: "Ascon"
+
+filesets:
+
+  rtl_files_ascon_init:
+    files:   
+    - rtl/ascon_init_integration/ascon_reg_pkg.sv
+    - rtl/ascon_init_integration/ascon_sbox_reg_pkg.sv
+    - rtl/ascon_init_integration/ascon_reg_top.sv
+    - rtl/ascon_init_integration/ascon_sbox_reg_top.sv
+    - rtl/ascon_init_integration/config.sv
+    - rtl/ascon_init_integration/ascon_regs.sv
+    - rtl/ascon_init_integration/ascon_register_lut.sv
+    - rtl/ascon_init_integration/asconp_lut.sv
+    - rtl/ascon_init_integration/sub_layer_lut.sv
+    - rtl/ascon_init_integration/ascon_init.sv
+    - rtl/ascon_init_integration/ascon_wrapper.sv
+    file_type: systemVerilogSource
+
+targets:
+  default: &default
+    filesets:
+    - rtl_files_ascon_init
+
+  sim:
+    <<: *default
+
+    description: Simulate the design
+    default_tool: verilator
+
+    filesets_append:
+    - rtl_files_ascon_init
+
+    toplevel: ascon_wrapper
+
+    tools:
+      verilator:
+        mode: cc
+        verilator_options:
+          - '--cc'
+          - '--trace'
+          - '--exe tb_top.cpp'
+          - '-CFLAGS "-std=c++11 -Wall -g -fpermissive"'
+          - '-LDFLAGS "-pthread -lutil -lelf"'
+          - "-Wall"

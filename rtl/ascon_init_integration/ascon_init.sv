@@ -3,16 +3,16 @@
 module ascon_init (
     input  logic                 clk_i,
     input  logic                 rst_n_i,
-    // Register interface
-    input  reg_req_t             reg_req_i,
-    output reg_rsp_t             reg_rsp_o,
+    // Register interface to Sbox
+    input  reg_req_t             sbox_reg_req_i,
+    output reg_rsp_t             sbox_reg_rsp_o,
     // Status
     input  logic                 start_i,
     output logic                 finished_o,
     // State
     input  logic     [4:0][63:0] state_i,
     output logic     [4:0][63:0] state_o,
-    output logic                 update_state_i,
+    output logic                 update_state_o,
     // Interrupt
     output logic                 ascon_intr_o
 );
@@ -34,8 +34,8 @@ module ascon_init (
   asconp_lut asconp_i (
       .clk_i      (clk_i),
       .rst_n_i    (rst_n_i),
-      .sbox_addr_o(sbox_addr_o),
-      .sbox_i     (sbox_i),
+      .sbox_reg_req_i  (sbox_reg_req_i),
+      .sbox_reg_rsp_o  (sbox_reg_rsp_o),
       .round_cnt  (round),
       .x0_i       (state[0]),
       .x1_i       (state[1]),
@@ -52,7 +52,7 @@ module ascon_init (
   always_comb begin
 
     state_o = state_ascon;
-    update_state_i = (fsm == BUSY) && (round_inc == 4'd12);
+    update_state_o = fsm == BUSY;
 
     if (fsm == IDLE) begin
       state = state_i;

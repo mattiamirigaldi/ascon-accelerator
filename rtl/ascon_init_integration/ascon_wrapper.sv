@@ -14,16 +14,16 @@ module ascon_wrapper(
     ascon_init ascon_init_inst (
         .clk_i          (clk_i),
         .rst_n_i        (rst_n_i),
-        // Register interface
-        .reg_req_i      (reg_req_i),
-        .reg_rsp_o      (reg_rsp_o),
+        // Register interface to Sbox
+        .sbox_reg_req_i      (reg_req_i),
+        .sbox_reg_rsp_o      (reg_rsp_o),
         // Status
         .start_i(start),
         .finished_o(finished),
         // State
         .state_i(input_state),
         .state_o(ascon_state),
-        .update_state_i(update_state),
+        .update_state_o(update_state),
         // Interrupt
         .ascon_intr_o(intr_o)
     )

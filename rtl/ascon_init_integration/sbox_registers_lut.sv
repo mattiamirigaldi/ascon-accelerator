@@ -2,8 +2,8 @@ module sbox_registers_lut (
     input logic clk_i,
     input logic rst_n_i,
     // Register interface
-    input reg_req_t reg_req_i,
-    output reg_rsp_t reg_rsp_o,
+    input reg_req_t  sbox_reg_req_i,
+    output reg_rsp_t sbox_reg_rsp_o,
     // SBox interface
     input logic [63:0][4:0] addr_i,
     output logic [63:0][4:0] data_o
@@ -18,8 +18,8 @@ module sbox_registers_lut (
   ) ascon_reg_top_i (
       .clk_i(clk_i),
       .rst_ni(rst_n_i),
-      .reg_req_i(reg_req_i),
-      .reg_rsp_o(reg_rsp_o),
+      .reg_req_i(sbox_reg_req_i),
+      .reg_rsp_o(sbox_reg_rsp_o),
       .reg2hw(reg2hw),
       .hw2reg(hw2reg),
       .devmode_i(1'b1)
@@ -34,6 +34,7 @@ module sbox_registers_lut (
 
   always_comb begin
     for (int i = 0; i < 63; i++) begin
+      
       addr_sbox_row[i] = addr_i[i][4:2];
       addr_sbox_col[i] = addr_i[i][1:0];
 

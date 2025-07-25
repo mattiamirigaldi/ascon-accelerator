@@ -15,8 +15,8 @@
 module asconp_lut (
     input  logic            clk_i,
     input  logic            rst_n_i,
-    input  reg_req_t        reg_req_i,
-    output reg_rsp_t        reg_rsp_o,
+    input  reg_req_t        sbox_reg_req_i,
+    output reg_rsp_t        sbox_reg_rsp_o,
     input  logic     [ 3:0] round_cnt,
     input  logic     [63:0] x0_i,
     input  logic     [63:0] x1_i,
@@ -57,8 +57,8 @@ module asconp_lut (
   sub_layer_lut sub_layer_inst (
       .clk_i    (clk_i),
       .rst_n_i  (rst_n_i),
-      .reg_req_i(reg_req_i),
-      .reg_rsp_o(reg_rsp_o),
+      .sbox_reg_req_i(sbox_reg_req_i),
+      .sbox_reg_rsp_o(sbox_reg_rsp_o),
       .x0_i     (x0_const_add),
       .x1_i     (x1_const_add),
       .x2_i     (x2_const_add),

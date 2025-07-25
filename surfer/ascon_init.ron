@@ -22,14 +22,18 @@
     autoload_sibling_state_files: None,
     autoreload_files: None,
     waves: Some((
-        source: File("/home/mattia-mirigaldi/Desktop/chip_polheepo/ascon-verilog/dump.fst"),
+        source: File("dump.fst"),
         format: Fst,
         active_scope: Some(WaveScope((
             strs: [
                 "ascon_init",
                 "asconp_i",
+                "sub_layer_inst",
+                "genblk1[0]",
+                "sbox_inst",
+                "sbox_lut",
             ],
-            id: Wellen((4)),
+            id: Wellen((8)),
         ))),
         items_tree: (
             items: [
@@ -210,75 +214,7 @@
             ],
         ),
         displayed_items: {
-            (26): Divider((
-                color: None,
-                background_color: None,
-                name: None,
-            )),
-            (32): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                            "asconp_i",
-                        ],
-                        id: Wellen((4)),
-                    ),
-                    name: "x4_aff2",
-                    id: Wellen((63)),
-                ),
-                color: None,
-                background_color: None,
-                display_name: "x4_aff2 [63:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (18): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                            "asconp_i",
-                        ],
-                        id: Wellen((4)),
-                    ),
-                    name: "x1_i",
-                    id: Wellen((45)),
-                ),
-                color: None,
-                background_color: None,
-                display_name: "x1_i [63:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (29): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                            "asconp_i",
-                        ],
-                        id: Wellen((4)),
-                    ),
-                    name: "x1_aff2",
-                    id: Wellen((57)),
-                ),
-                color: None,
-                background_color: None,
-                display_name: "x1_aff2 [63:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (12): Variable((
+            (2): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -286,12 +222,85 @@
                         ],
                         id: Wellen((3)),
                     ),
-                    name: "ascon_intr",
-                    id: Wellen((32)),
+                    name: "state_o",
+                    id: Wellen((31)),
                 ),
                 color: Some("Violet"),
                 background_color: None,
-                display_name: "ascon_intr",
+                display_name: "state_o [319:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (16): Group((
+                name: "ascon proc inteface",
+                color: Some("Pink"),
+                background_color: None,
+                content: [],
+                is_open: false,
+            )),
+            (23): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                        ],
+                        id: Wellen((3)),
+                    ),
+                    name: "fsm",
+                    id: Wellen((35)),
+                ),
+                color: Some("Violet"),
+                background_color: None,
+                display_name: "fsm",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (27): Divider((
+                color: None,
+                background_color: None,
+                name: None,
+            )),
+            (30): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                            "asconp_i",
+                        ],
+                        id: Wellen((4)),
+                    ),
+                    name: "x3_aff2",
+                    id: Wellen((61)),
+                ),
+                color: None,
+                background_color: None,
+                display_name: "x3_aff2 [63:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (6): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                        ],
+                        id: Wellen((3)),
+                    ),
+                    name: "sbox_addr_i",
+                    id: Wellen((28)),
+                ),
+                color: Some("Pink"),
+                background_color: None,
+                display_name: "sbox_addr_i [4:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -319,117 +328,7 @@
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (9): Divider((
-                color: None,
-                background_color: None,
-                name: None,
-            )),
-            (10): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                        ],
-                        id: Wellen((3)),
-                    ),
-                    name: "start_i",
-                    id: Wellen((26)),
-                ),
-                color: Some("Violet"),
-                background_color: None,
-                display_name: "start_i",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: Some(1.0),
-            )),
-            (3): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                        ],
-                        id: Wellen((3)),
-                    ),
-                    name: "clk",
-                    id: Wellen((23)),
-                ),
-                color: None,
-                background_color: None,
-                display_name: "clk",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (8): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                        ],
-                        id: Wellen((3)),
-                    ),
-                    name: "upd_sbox_i",
-                    id: Wellen((27)),
-                ),
-                color: Some("Pink"),
-                background_color: None,
-                display_name: "upd_sbox_i",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (2): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                        ],
-                        id: Wellen((3)),
-                    ),
-                    name: "state_o",
-                    id: Wellen((31)),
-                ),
-                color: Some("Violet"),
-                background_color: None,
-                display_name: "state_o [319:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (15): Divider((
-                color: None,
-                background_color: None,
-                name: None,
-            )),
-            (1): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                        ],
-                        id: Wellen((3)),
-                    ),
-                    name: "state_i",
-                    id: Wellen((25)),
-                ),
-                color: Some("Violet"),
-                background_color: None,
-                display_name: "state_i [319:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (20): Variable((
+            (19): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -438,54 +337,12 @@
                         ],
                         id: Wellen((4)),
                     ),
-                    name: "x3_i",
-                    id: Wellen((47)),
+                    name: "x2_i",
+                    id: Wellen((46)),
                 ),
                 color: None,
                 background_color: None,
-                display_name: "x3_i [63:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (25): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                            "asconp_i",
-                        ],
-                        id: Wellen((4)),
-                    ),
-                    name: "x2_const_add",
-                    id: Wellen((58)),
-                ),
-                color: None,
-                background_color: None,
-                display_name: "x2_const_add [63:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (13): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                            "asconp_i",
-                        ],
-                        id: Wellen((4)),
-                    ),
-                    name: "x0_i",
-                    id: Wellen((44)),
-                ),
-                color: None,
-                background_color: None,
-                display_name: "x0_i [63:0]",
+                display_name: "x2_i [63:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -512,7 +369,7 @@
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (30): Variable((
+            (18): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -521,80 +378,12 @@
                         ],
                         id: Wellen((4)),
                     ),
-                    name: "x3_aff2",
-                    id: Wellen((61)),
+                    name: "x1_i",
+                    id: Wellen((45)),
                 ),
                 color: None,
                 background_color: None,
-                display_name: "x3_aff2 [63:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (23): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                        ],
-                        id: Wellen((3)),
-                    ),
-                    name: "fsm",
-                    id: Wellen((35)),
-                ),
-                color: Some("Violet"),
-                background_color: None,
-                display_name: "fsm",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (24): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                            "asconp_i",
-                        ],
-                        id: Wellen((4)),
-                    ),
-                    name: "x4_i",
-                    id: Wellen((48)),
-                ),
-                color: None,
-                background_color: None,
-                display_name: "x4_i [63:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (16): Group((
-                name: "ascon proc inteface",
-                color: Some("Pink"),
-                background_color: None,
-                content: [],
-                is_open: false,
-            )),
-            (11): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "ascon_init",
-                        ],
-                        id: Wellen((3)),
-                    ),
-                    name: "busy_o",
-                    id: Wellen((30)),
-                ),
-                color: Some("Violet"),
-                background_color: None,
-                display_name: "busy_o",
+                display_name: "x1_i [63:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -622,7 +411,7 @@
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (6): Variable((
+            (11): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -630,12 +419,63 @@
                         ],
                         id: Wellen((3)),
                     ),
-                    name: "sbox_addr_i",
-                    id: Wellen((28)),
+                    name: "busy_o",
+                    id: Wellen((30)),
+                ),
+                color: Some("Violet"),
+                background_color: None,
+                display_name: "busy_o",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (8): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                        ],
+                        id: Wellen((3)),
+                    ),
+                    name: "upd_sbox_i",
+                    id: Wellen((27)),
                 ),
                 color: Some("Pink"),
                 background_color: None,
-                display_name: "sbox_addr_i [4:0]",
+                display_name: "upd_sbox_i",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (5): Divider((
+                color: None,
+                background_color: None,
+                name: None,
+            )),
+            (26): Divider((
+                color: None,
+                background_color: None,
+                name: None,
+            )),
+            (20): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                            "asconp_i",
+                        ],
+                        id: Wellen((4)),
+                    ),
+                    name: "x3_i",
+                    id: Wellen((47)),
+                ),
+                color: None,
+                background_color: None,
+                display_name: "x3_i [63:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -662,12 +502,12 @@
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (27): Divider((
+            (9): Divider((
                 color: None,
                 background_color: None,
                 name: None,
             )),
-            (19): Variable((
+            (32): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -676,12 +516,135 @@
                         ],
                         id: Wellen((4)),
                     ),
-                    name: "x2_i",
-                    id: Wellen((46)),
+                    name: "x4_aff2",
+                    id: Wellen((63)),
                 ),
                 color: None,
                 background_color: None,
-                display_name: "x2_i [63:0]",
+                display_name: "x4_aff2 [63:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (10): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                        ],
+                        id: Wellen((3)),
+                    ),
+                    name: "start_i",
+                    id: Wellen((26)),
+                ),
+                color: Some("Violet"),
+                background_color: None,
+                display_name: "start_i",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: Some(1.0),
+            )),
+            (24): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                            "asconp_i",
+                        ],
+                        id: Wellen((4)),
+                    ),
+                    name: "x4_i",
+                    id: Wellen((48)),
+                ),
+                color: None,
+                background_color: None,
+                display_name: "x4_i [63:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (1): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                        ],
+                        id: Wellen((3)),
+                    ),
+                    name: "state_i",
+                    id: Wellen((25)),
+                ),
+                color: Some("Violet"),
+                background_color: None,
+                display_name: "state_i [319:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (3): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                        ],
+                        id: Wellen((3)),
+                    ),
+                    name: "clk",
+                    id: Wellen((23)),
+                ),
+                color: None,
+                background_color: None,
+                display_name: "clk",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (25): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                            "asconp_i",
+                        ],
+                        id: Wellen((4)),
+                    ),
+                    name: "x2_const_add",
+                    id: Wellen((58)),
+                ),
+                color: None,
+                background_color: None,
+                display_name: "x2_const_add [63:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (29): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                            "asconp_i",
+                        ],
+                        id: Wellen((4)),
+                    ),
+                    name: "x1_aff2",
+                    id: Wellen((57)),
+                ),
+                color: None,
+                background_color: None,
+                display_name: "x1_aff2 [63:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -695,17 +658,58 @@
                 content: [],
                 is_open: false,
             )),
-            (5): Divider((
+            (15): Divider((
                 color: None,
                 background_color: None,
                 name: None,
+            )),
+            (13): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                            "asconp_i",
+                        ],
+                        id: Wellen((4)),
+                    ),
+                    name: "x0_i",
+                    id: Wellen((44)),
+                ),
+                color: None,
+                background_color: None,
+                display_name: "x0_i [63:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (12): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "ascon_init",
+                        ],
+                        id: Wellen((3)),
+                    ),
+                    name: "ascon_intr",
+                    id: Wellen((32)),
+                ),
+                color: Some("Violet"),
+                background_color: None,
+                display_name: "ascon_intr",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
             )),
         },
         display_item_ref_counter: 32,
         viewports: [
             (
-                curr_left: (0.11286782730142154),
-                curr_right: (0.4149827318341531),
+                curr_left: (-0.033324502405023604),
+                curr_right: (1.112898526735109),
                 target_left: (-0.04457071914151827),
                 target_right: (0.1469506154197945),
                 move_start_left: (-0.04457071914151827),
@@ -715,10 +719,10 @@
             ),
         ],
         cursor: Some((1, [
-            2383,
+            10785,
         ])),
         markers: {},
-        focused_item: Some((24)),
+        focused_item: Some((25)),
         focused_transaction: (None, None),
         default_variable_name_type: Unique,
         scroll_offset: 0.0,
@@ -745,7 +749,7 @@
     variable_name_filter_focused: false,
     variable_filter: (
         name_filter_type: Contain,
-        name_filter_str: "x4",
+        name_filter_str: "",
         name_filter_case_insensitive: true,
         include_inputs: true,
         include_outputs: true,
@@ -754,6 +758,6 @@
         group_by_direction: false,
     ),
     rename_target: None,
-    sidepanel_width: Some(281.34375),
+    sidepanel_width: Some(300.0),
     ui_zoom_factor: None,
 )

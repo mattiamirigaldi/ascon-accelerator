@@ -46,10 +46,12 @@ module asconp_lut (
   assign x4 = x4_i;
 
   // constant addition
-  assign t = (4'hC) - (round_cnt - i);
+  //#TODO : use the commented version also for the ascon python module
+  //assign t = (4'hC) - (round_cnt - i);
   assign x0_const_add = x0;
   assign x1_const_add = x1;
-  assign x2_const_add = x2 ^ {56'd0, (4'hF - t), t};
+  assign x2_const_add = x2[i] ^ (8'hf0 - (round_cnt * 1 + i) * 8'h10 + (round_cnt * 1 + i) * 8'h01);
+  //assign x2_const_add = x2 ^ {56'd0, (4'hF - t), t};
   assign x3_const_add = x3;
   assign x4_const_add = x4;
   sub_layer_lut sub_layer_inst (

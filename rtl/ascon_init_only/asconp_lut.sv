@@ -1,15 +1,10 @@
 `ifndef INCL_ASCONP
 `define INCL_ASCONP
 
-// Licensed under the Creative Commons 1.0 Universal License (CC0), see LICENSE
-// for details.
+// Author: Mattia Mirigaldi @email: mattia.mirigaldi@polito.it
 //
-// Author: Robert Primas (rprimas 'at' proton.me, https://rprimas.github.io)
-//
-// Implementation of the Ascon permutation (Ascon-p).
-// Performs UROL rounds per clock cycle.
+// Implementation of the Ascon permutation (Ascon-p) with S-Box programmable LUT
 
-`include "config.sv"
 `include "sub_layer_lut.sv"
 
 module asconp_lut (

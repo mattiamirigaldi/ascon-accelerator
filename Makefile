@@ -3,16 +3,6 @@
 
 MAKEFLAGS=-j1
 
-# The following variants require "CCW = 32" in test.py:
-VARIANT = V1
-# VARIANT = V2
-# VARIANT = V3
-
-# The following variants require "CCW = 64" in test.py:
-# VARIANT = V4
-# VARIANT = V5
-# VARIANT = V6
-
 # Verilator arguments
 SIM ?= verilator
 TOPLEVEL_LANG ?= verilog

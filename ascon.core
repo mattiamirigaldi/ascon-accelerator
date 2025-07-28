@@ -10,16 +10,16 @@ filesets:
     - x-heep::packages
     - pulp-platform.org::common_cells
     files:   
-    - rtl/ascon_init_integration/ascon_reg_pkg.sv
-    - rtl/ascon_init_integration/ascon_sbox_reg_pkg.sv
-    - rtl/ascon_init_integration/ascon_reg_top.sv
-    - rtl/ascon_init_integration/ascon_sbox_reg_top.sv
-    - rtl/ascon_init_integration/ascon_regs.sv
-    - rtl/ascon_init_integration/sbox_registers_lut.sv
-    - rtl/ascon_init_integration/asconp_lut.sv
-    - rtl/ascon_init_integration/sub_layer_lut.sv
-    - rtl/ascon_init_integration/ascon_init.sv
-    - rtl/ascon_init_integration/ascon_wrapper.sv
+    - rtl/ascon_reg_pkg.sv
+    - rtl/ascon_sbox_reg_pkg.sv
+    - rtl/ascon_reg_top.sv
+    - rtl/ascon_sbox_reg_top.sv
+    - rtl/ascon_regs.sv
+    - rtl/sbox_registers_lut.sv
+    - rtl/asconp_lut.sv
+    - rtl/sub_layer_lut.sv
+    - rtl/ascon_init.sv
+    - rtl/ascon_wrapper.sv
     file_type: systemVerilogSource
 
 targets:

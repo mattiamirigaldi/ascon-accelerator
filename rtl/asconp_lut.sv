@@ -9,7 +9,9 @@
 // Implementation of the Ascon permutation (Ascon-p).
 // Performs UROL rounds per clock cycle.
 
-module asconp_lut (
+module asconp_lut
+  import reg_pkg::*;
+  (
     input  logic            clk_i,
     input  logic            rst_n_i,
     input  reg_req_t        sbox_reg_req_i,

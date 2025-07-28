@@ -1,4 +1,6 @@
-module sub_layer_lut (
+module sub_layer_lut 
+  import reg_pkg::*;
+  (
     input  logic            clk_i,
     input  logic            rst_n_i,
     input  reg_req_t        sbox_reg_req_i,

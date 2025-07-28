@@ -1,4 +1,6 @@
-module ascon_init (
+module ascon_init
+  import reg_pkg::*;
+  (
     input  logic                 clk_i,
     input  logic                 rst_n_i,
     // Register interface to Sbox

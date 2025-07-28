@@ -1,5 +1,6 @@
 module ascon_regs
-(
+  import reg_pkg::*;
+  (
     input logic clk_i,
     input logic rst_n_i,
     input reg_req_t reg_req_i,
@@ -11,7 +12,7 @@ module ascon_regs
     input logic update_state_i,
     input logic [4:0][63:0] state_i,
     output logic [4:0][63:0] state_o
-);
+  );
 
   ascon_hw2reg_t hw2reg;
   ascon_reg2hw_t reg2hw;

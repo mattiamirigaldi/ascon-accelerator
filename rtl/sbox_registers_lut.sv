@@ -1,4 +1,6 @@
-module sbox_registers_lut (
+module sbox_registers_lut
+  import reg_pkg::*;
+  (
     input logic clk_i,
     input logic rst_n_i,
     // Register interface

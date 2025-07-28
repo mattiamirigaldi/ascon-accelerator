@@ -9,8 +9,6 @@
 // Implementation of the Ascon permutation (Ascon-p).
 // Performs UROL rounds per clock cycle.
 
-`include "sub_layer_lut.sv"
-
 module asconp_lut (
     input  logic            clk_i,
     input  logic            rst_n_i,

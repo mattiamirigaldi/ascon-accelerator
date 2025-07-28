@@ -1,5 +1,3 @@
-`include "asconp_lut.sv"
-
 typedef logic [4:0][63:0] state_t;
 
 module ascon_init (

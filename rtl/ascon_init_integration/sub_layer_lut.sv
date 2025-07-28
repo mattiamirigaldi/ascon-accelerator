@@ -1,5 +1,3 @@
-`include "sbox_ascon.sv"
-
 module sub_layer_lut (
     input  logic            clk_i,
     input  logic            rst_n_i,

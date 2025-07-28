@@ -1,3 +1,5 @@
+typedef logic [4:0][63:0] state_t;
+
 module ascon_wrapper(
     input logic                    clk_i,
     input logic                    rst_n_i,
@@ -9,7 +11,7 @@ module ascon_wrapper(
 );
 
     logic start, finished, update_state;
-    logic [4:0][63:0] input_state, ascon_state;
+    state_t input_state, ascon_state;
 
     ascon_init ascon_init_inst (
         .clk_i          (clk_i),

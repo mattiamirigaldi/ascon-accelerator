@@ -6,6 +6,9 @@ description: "Ascon"
 filesets:
 
   rtl_files_ascon_init:
+    depend:
+    - x-heep::packages
+    - pulp-platform.org::common_cells
     files:   
     - rtl/ascon_init_integration/ascon_reg_pkg.sv
     - rtl/ascon_init_integration/ascon_sbox_reg_pkg.sv

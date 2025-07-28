@@ -5,7 +5,7 @@ module ascon_wrapper(
     input reg_req_t                reg_req_i,
     output reg_rsp_t               reg_rsp_o,
     // Interrupt
-    output logic                   intr_o,
+    output logic                   intr_o
 );
 
     logic start, finished, update_state;
@@ -26,7 +26,7 @@ module ascon_wrapper(
         .update_state_o(update_state),
         // Interrupt
         .ascon_intr_o(intr_o)
-    )
+    );
 
     ascon_regs ascon_regs_inst (
         .clk_i          (clk_i),

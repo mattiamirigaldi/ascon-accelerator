@@ -8,3 +8,5 @@ results.xml
 syn.v
 private/
 build.log
+ascon_test/
+rtl/ascon_init_only/

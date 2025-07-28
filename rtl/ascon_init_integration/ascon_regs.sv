@@ -1,8 +1,4 @@
 module ascon_regs
-  import stream_intf_pkg::*;
-  import pea_pkg::*;
-  import reg_pkg::*;
-  import mage_reg_pkg::*;
 (
     input logic clk_i,
     input logic rst_n_i,

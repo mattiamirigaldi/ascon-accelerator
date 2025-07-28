@@ -15,7 +15,7 @@ filesets:
     - rtl/ascon_init_integration/ascon_reg_top.sv
     - rtl/ascon_init_integration/ascon_sbox_reg_top.sv
     - rtl/ascon_init_integration/ascon_regs.sv
-    - rtl/ascon_init_integration/ascon_register_lut.sv
+    - rtl/ascon_init_integration/sbox_registers_lut.sv
     - rtl/ascon_init_integration/asconp_lut.sv
     - rtl/ascon_init_integration/sub_layer_lut.sv
     - rtl/ascon_init_integration/ascon_init.sv

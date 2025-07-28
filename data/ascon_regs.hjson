@@ -1,0 +1,32 @@
+{ name: "ascon",
+  clock_primary: "clk_i",
+  bus_interfaces: [
+    { protocol: "reg_iface", direction: "device" }
+  ],
+  registers: [
+
+    { name: "STATUS",
+      desc: "Start/Finished bit set by SW and by ASCON",
+      swaccess: "rw",
+      hwaccess: "hrw",
+      fields: [
+      { bits: "0:0"
+      }
+      ],
+    },
+
+    { multireg:
+        { name: "STATE",
+        desc: "I/O state for Ascon",
+        count : "10",
+        cname: "STATE",
+        swaccess: "rw",
+        hwaccess: "hrw",
+        fields: [
+        { bits: "31:0"
+        }
+        ],
+        }
+    },
+  ]
+}

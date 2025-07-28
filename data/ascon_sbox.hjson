@@ -1,0 +1,36 @@
+{ name: "ascon_sbox",
+  clock_primary: "clk_i",
+  bus_interfaces: [
+    { protocol: "reg_iface", direction: "device" }
+  ],
+  registers: [
+
+    { multireg:
+      { name: "SBOX",
+      desc: "Sbox for Ascon",
+      count : "8",
+      cname: "state",
+      swaccess: "rw",
+      hwaccess: "hrw",
+      fields: [
+      { bits: "4:0",
+        name: "ENTRY_0",
+        desc: "ENTRY_0"
+      },
+      { bits: "9:5",
+        name: "ENTRY_1",
+        desc: "ENTRY_1"
+      },
+      { bits: "14:10",
+        name: "ENTRY_2",
+        desc: "ENTRY_2"
+      },
+      { bits: "19:15",
+        name: "ENTRY_3",
+        desc: "ENTRY_3"
+      }
+      ],
+      }
+    },
+  ]
+}

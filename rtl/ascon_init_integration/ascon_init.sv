@@ -1,5 +1,7 @@
 `include "asconp_lut.sv"
 
+typedef logic [4:0][63:0] state_t;
+
 module ascon_init (
     input  logic                 clk_i,
     input  logic                 rst_n_i,
@@ -10,8 +12,8 @@ module ascon_init (
     input  logic                 start_i,
     output logic                 finished_o,
     // State
-    input  logic     [4:0][63:0] state_i,
-    output logic     [4:0][63:0] state_o,
+    input  state_t               state_i,
+    output state_t               state_o,
     output logic                 update_state_o,
     // Interrupt
     output logic                 ascon_intr_o
@@ -21,8 +23,7 @@ module ascon_init (
     IDLE,
     BUSY
   } fsm_t;
-  logic [4:0][63:0] state;
-  logic [4:0][63:0] state_ascon;
+  state_t state, asconp_o;
 
   fsm_t fsm;
   logic [3:0] round;
@@ -42,22 +43,22 @@ module ascon_init (
       .x2_i       (state[2]),
       .x3_i       (state[3]),
       .x4_i       (state[4]),
-      .x0_o       (state_ascon[0]),
-      .x1_o       (state_ascon[1]),
-      .x2_o       (state_ascon[2]),
-      .x3_o       (state_ascon[3]),
-      .x4_o       (state_ascon[4])
+      .x0_o       (asconp_o[0]),
+      .x1_o       (asconp_o[1]),
+      .x2_o       (asconp_o[2]),
+      .x3_o       (asconp_o[3]),
+      .x4_o       (asconp_o[4])
   );
 
   always_comb begin
 
-    state_o = state_ascon;
+    state_o = asconp_o;
     update_state_o = fsm == BUSY;
 
     if (fsm == IDLE) begin
       state = state_i;
     end else begin
-      state = state_ascon;
+      state = asconp_o;
     end
   end
 

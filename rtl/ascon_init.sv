@@ -1,5 +1,6 @@
 module ascon_init
   import reg_pkg::*;
+  import ascon_pkg::*;
   (
     input  logic                 clk_i,
     input  logic                 rst_n_i,

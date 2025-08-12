@@ -15,7 +15,7 @@ module sbox_registers_lut
   ascon_sbox_hw2reg_t hw2reg;
   ascon_sbox_reg2hw_t reg2hw;
 
-  ascon_reg_top #(
+  ascon_sbox_reg_top #(
       .reg_req_t(reg_req_t),
       .reg_rsp_t(reg_rsp_t)
   ) ascon_reg_top_i (
@@ -42,11 +42,11 @@ module sbox_registers_lut
       addr_sbox_col[i] = addr_i[i][1:0];
 
       case (addr_sbox_col[i])
-        2'b00:   data_o[i] = reg2hw.sbox[addr_sbox_row].entry_0;
-        2'b01:   data_o[i] = reg2hw.sbox[addr_sbox_row].entry_1;
-        2'b10:   data_o[i] = reg2hw.sbox[addr_sbox_row].entry_2;
-        2'b11:   data_o[i] = reg2hw.sbox[addr_sbox_row].entry_3;
-        default: data_o[i] = 6'b0;
+        2'b00:   data_o[i] = reg2hw.sbox[addr_sbox_row[i]].entry_0;
+        2'b01:   data_o[i] = reg2hw.sbox[addr_sbox_row[i]].entry_1;
+        2'b10:   data_o[i] = reg2hw.sbox[addr_sbox_row[i]].entry_2;
+        2'b11:   data_o[i] = reg2hw.sbox[addr_sbox_row[i]].entry_3;
+        default: data_o[i] = 5'b0;
       endcase
 
     end

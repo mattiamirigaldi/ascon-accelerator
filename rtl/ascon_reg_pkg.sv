@@ -27,17 +27,18 @@ package ascon_reg_pkg;
     logic        de;
   } ascon_hw2reg_state_mreg_t;
 
-  // Register -> HW type
+  // Regs read from HW : Register -> HW type
   typedef struct packed {
-    ascon_reg2hw_status_reg_t status;  // [320:320]
-    ascon_reg2hw_state_mreg_t [9:0] state;  // [319:0]
+    ascon_reg2hw_status_reg_t status;  // [320:320] 1 bit
+    ascon_reg2hw_state_mreg_t [9:0] state;  // [319:0] 10×32 bits
   } ascon_reg2hw_t;
 
-  // HW -> register type
+  // Regs written by HW : HW -> register type
   typedef struct packed {
-    ascon_hw2reg_status_reg_t status;  // [331:330]
-    ascon_hw2reg_state_mreg_t [9:0] state;  // [329:0]
+    ascon_hw2reg_status_reg_t status;  // [331:330] 2 bits (d+de)
+    ascon_hw2reg_state_mreg_t [9:0] state;  // [329:0] 10×33 bits (d+de each)
   } ascon_hw2reg_t;
+
 
   // Register offsets
   parameter logic [BlockAw-1:0] ASCON_STATUS_OFFSET = 6'h0;

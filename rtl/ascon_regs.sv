@@ -37,8 +37,8 @@ module ascon_regs
 
   always_comb begin
     start_o = reg2hw.status.q;
-    hw2reg.start.d = 1'b1;
-    hw2reg.start.de = finished_i;
+    hw2reg.status.d = 1'b1;
+    hw2reg.status.de = finished_i;
   end
 
   ////////////////////////////////

@@ -8,7 +8,7 @@ module ascon_regs
     output reg_rsp_t reg_rsp_o,
     // Status
     output logic start_o,
-    output logic finished_i,
+    input logic finished_i,
     // State
     input logic update_state_i,
     input logic [4:0][63:0] state_i,

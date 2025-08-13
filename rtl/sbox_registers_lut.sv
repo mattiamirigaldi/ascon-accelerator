@@ -12,7 +12,6 @@ module sbox_registers_lut
     output logic [63:0][4:0] data_o
 );
 
-  ascon_sbox_hw2reg_t hw2reg;
   ascon_sbox_reg2hw_t reg2hw;
 
   ascon_sbox_reg_top #(
@@ -24,7 +23,7 @@ module sbox_registers_lut
       .reg_req_i(sbox_reg_req_i),
       .reg_rsp_o(sbox_reg_rsp_o),
       .reg2hw(reg2hw),
-      .hw2reg(hw2reg),
+      .hw2reg(), // ASCON Sbox only read from hardware, no write
       .devmode_i(1'b1)
   );
 

@@ -45,16 +45,19 @@ module ascon_regs
   //        ASCON State         //
   ////////////////////////////////
   always_comb begin
+    // Read registers and provide the intial state to ASCON 
     for (int i = 0; i < 10; i = i + 2) begin
       state_o[i>>1][31:0]  = reg2hw.state[i].q;
       state_o[i>>1][63:32] = reg2hw.state[i+1].q;
     end
 
+    // Write ASCON processed state back to registers
     for (int i = 0; i < 10; i = i + 2) begin
-      hw2reg.state[i].d   = state_o[i>>1][31:0];
-      hw2reg.state[i+1].d = state_o[i>>1][63:32];
+      hw2reg.state[i].d   = state_i[i>>1][31:0];
+      hw2reg.state[i+1].d = state_i[i>>1][63:32];
     end
 
+    // Enable updates when ASCON has processed the state
     for (int i = 0; i < 10; i++) begin
       hw2reg.state[i].de = update_state_i;
     end

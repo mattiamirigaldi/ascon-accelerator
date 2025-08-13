@@ -35,7 +35,6 @@ module asconp_lut
   logic [63:0] x3_const_add, x3_aff2;
   logic [63:0] x4_const_add, x4_aff2;
   logic [1:0][63:0] x0, x1, x2, x3, x4;
-  logic [3:0] t;
 
   assign x0[0] = x0_i;
   assign x1[0] = x1_i;

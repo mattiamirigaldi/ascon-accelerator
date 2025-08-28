@@ -49,17 +49,8 @@ module ascon_init
       .x4_o       (asconp_o[4])
   );
 
-  always_comb begin
-
-    state_o = asconp_o;
-    update_state_o = fsm == BUSY;
-
-    if (fsm == IDLE) begin
-      state = state_i;
-    end else begin
-      state = asconp_o;
-    end
-  end
+  assign state_o = asconp_o;
+  assign update_state_o = fsm == BUSY;
 
   // main FSM ------------------------------------------------------------------
   always_ff @(posedge clk_i or negedge rst_n_i) begin
@@ -67,10 +58,12 @@ module ascon_init
       fsm    <= IDLE;
       round  <= '0;
       finished_o <= 1'b0;
+      state <= '0;
     end else begin
       unique case (fsm)
         IDLE: begin
           finished_o <= 1'b0;
+          state <= state_i;
           if (start_i) begin
             fsm   <= BUSY;
             round <= '0;
@@ -80,6 +73,7 @@ module ascon_init
         BUSY: begin
           round <= round_inc;
           finished_o <= 1'b0;
+          state <= asconp_o;
           if (round_inc == 4'd12) begin  // 12 rounds done
             fsm    <= IDLE;
             finished_o <= 1'b1;

@@ -43,7 +43,7 @@ SURFER_RON = surfer/syn.ron
 VERILOG_SOURCES = $(PWD)/syn/cmos_cells.v $(PWD)/syn.v
 else
 SURFER_RON = surfer/sim.ron
-VERILOG_SOURCES = $(PWD)/rtl/ascon_init_only/ascon_init.sv
+VERILOG_SOURCES = $(PWD)/rtl/ascon_init.sv
 endif
 
 # Include cocotb makefile only if cocotb-config exists

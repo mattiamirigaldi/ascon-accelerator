@@ -67,6 +67,9 @@ Other supporting files:
 
   * `make` or `make sim`
 
+**NOTE :** known issue that simulation does not work since RTL updated to be integrated inside microcontroller X-HEEP. The simulation envinroment used in X-HEEP is different from the one used here (*cocotb*) and there are mismatches.  
+
+
 ## RTL Synthesis
 
 * Install Yosys (tested version `0.53`):

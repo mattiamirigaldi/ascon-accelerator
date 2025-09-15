@@ -13,13 +13,22 @@ package ascon_reg_pkg;
   // Typedefs for registers //
   ////////////////////////////
 
-  typedef struct packed {logic q;} ascon_reg2hw_status_reg_t;
-
-  typedef struct packed {logic [31:0] q;} ascon_reg2hw_state_mreg_t;
+  typedef struct packed {
+    struct packed {
+      logic        q;
+      logic        qe;
+    } start;
+  } ascon_reg2hw_status_reg_t;
 
   typedef struct packed {
-    logic d;
-    logic de;
+    logic [31:0] q;
+  } ascon_reg2hw_state_mreg_t;
+
+  typedef struct packed {
+    struct packed {
+      logic        d;
+      logic        de;
+    } done;
   } ascon_hw2reg_status_reg_t;
 
   typedef struct packed {
@@ -27,31 +36,30 @@ package ascon_reg_pkg;
     logic        de;
   } ascon_hw2reg_state_mreg_t;
 
-  // Regs read from HW : Register -> HW type
+  // Register -> HW type
   typedef struct packed {
-    ascon_reg2hw_status_reg_t status;  // [320:320] 1 bit
-    ascon_reg2hw_state_mreg_t [9:0] state;  // [319:0] 10×32 bits
+    ascon_reg2hw_status_reg_t status; // [321:320]
+    ascon_reg2hw_state_mreg_t [9:0] state; // [319:0]
   } ascon_reg2hw_t;
 
-  // Regs written by HW : HW -> register type
+  // HW -> register type
   typedef struct packed {
-    ascon_hw2reg_status_reg_t status;  // [331:330] 2 bits (d+de)
-    ascon_hw2reg_state_mreg_t [9:0] state;  // [329:0] 10×33 bits (d+de each)
+    ascon_hw2reg_status_reg_t status; // [331:330]
+    ascon_hw2reg_state_mreg_t [9:0] state; // [329:0]
   } ascon_hw2reg_t;
 
-
   // Register offsets
-  parameter logic [BlockAw-1:0] ASCON_STATUS_OFFSET = 6'h0;
-  parameter logic [BlockAw-1:0] ASCON_STATE_0_OFFSET = 6'h4;
-  parameter logic [BlockAw-1:0] ASCON_STATE_1_OFFSET = 6'h8;
-  parameter logic [BlockAw-1:0] ASCON_STATE_2_OFFSET = 6'hc;
-  parameter logic [BlockAw-1:0] ASCON_STATE_3_OFFSET = 6'h10;
-  parameter logic [BlockAw-1:0] ASCON_STATE_4_OFFSET = 6'h14;
-  parameter logic [BlockAw-1:0] ASCON_STATE_5_OFFSET = 6'h18;
-  parameter logic [BlockAw-1:0] ASCON_STATE_6_OFFSET = 6'h1c;
-  parameter logic [BlockAw-1:0] ASCON_STATE_7_OFFSET = 6'h20;
-  parameter logic [BlockAw-1:0] ASCON_STATE_8_OFFSET = 6'h24;
-  parameter logic [BlockAw-1:0] ASCON_STATE_9_OFFSET = 6'h28;
+  parameter logic [BlockAw-1:0] ASCON_STATUS_OFFSET = 6'h 0;
+  parameter logic [BlockAw-1:0] ASCON_STATE_0_OFFSET = 6'h 4;
+  parameter logic [BlockAw-1:0] ASCON_STATE_1_OFFSET = 6'h 8;
+  parameter logic [BlockAw-1:0] ASCON_STATE_2_OFFSET = 6'h c;
+  parameter logic [BlockAw-1:0] ASCON_STATE_3_OFFSET = 6'h 10;
+  parameter logic [BlockAw-1:0] ASCON_STATE_4_OFFSET = 6'h 14;
+  parameter logic [BlockAw-1:0] ASCON_STATE_5_OFFSET = 6'h 18;
+  parameter logic [BlockAw-1:0] ASCON_STATE_6_OFFSET = 6'h 1c;
+  parameter logic [BlockAw-1:0] ASCON_STATE_7_OFFSET = 6'h 20;
+  parameter logic [BlockAw-1:0] ASCON_STATE_8_OFFSET = 6'h 24;
+  parameter logic [BlockAw-1:0] ASCON_STATE_9_OFFSET = 6'h 28;
 
   // Register index
   typedef enum int {
@@ -69,18 +77,18 @@ package ascon_reg_pkg;
   } ascon_id_e;
 
   // Register width information to check illegal writes
-  parameter logic [3:0] ASCON_PERMIT[11] = '{
-      4'b0001,  // index[ 0] ASCON_STATUS
-      4'b1111,  // index[ 1] ASCON_STATE_0
-      4'b1111,  // index[ 2] ASCON_STATE_1
-      4'b1111,  // index[ 3] ASCON_STATE_2
-      4'b1111,  // index[ 4] ASCON_STATE_3
-      4'b1111,  // index[ 5] ASCON_STATE_4
-      4'b1111,  // index[ 6] ASCON_STATE_5
-      4'b1111,  // index[ 7] ASCON_STATE_6
-      4'b1111,  // index[ 8] ASCON_STATE_7
-      4'b1111,  // index[ 9] ASCON_STATE_8
-      4'b1111  // index[10] ASCON_STATE_9
+  parameter logic [3:0] ASCON_PERMIT [11] = '{
+    4'b 0001, // index[ 0] ASCON_STATUS
+    4'b 1111, // index[ 1] ASCON_STATE_0
+    4'b 1111, // index[ 2] ASCON_STATE_1
+    4'b 1111, // index[ 3] ASCON_STATE_2
+    4'b 1111, // index[ 4] ASCON_STATE_3
+    4'b 1111, // index[ 5] ASCON_STATE_4
+    4'b 1111, // index[ 6] ASCON_STATE_5
+    4'b 1111, // index[ 7] ASCON_STATE_6
+    4'b 1111, // index[ 8] ASCON_STATE_7
+    4'b 1111, // index[ 9] ASCON_STATE_8
+    4'b 1111  // index[10] ASCON_STATE_9
   };
 
 endpackage

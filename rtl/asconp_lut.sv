@@ -35,6 +35,7 @@ module asconp_lut
   logic [63:0] x3_const_add, x3_aff2;
   logic [63:0] x4_const_add, x4_aff2;
   logic [1:0][63:0] x0, x1, x2, x3, x4;
+  logic [63:0] round_const;
 
   assign x0[0] = x0_i;
   assign x1[0] = x1_i;
@@ -43,9 +44,10 @@ module asconp_lut
   assign x4[0] = x4_i;
 
   // constant addition
+  assign round_const = 64'hf0 - (round_cnt * 1) * 64'h10 + (round_cnt * 1) * 64'h01;
   assign x0_const_add = x0[0];
   assign x1_const_add = x1[0];
-  assign x2_const_add = x2[0] ^ (64'hf0 - (round_cnt * 1) * 64'h10 + (round_cnt * 1) * 64'h01);
+  assign x2_const_add = x2[0] ^ round_const;
   assign x3_const_add = x3[0];
   assign x4_const_add = x4[0];
 

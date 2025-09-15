@@ -35,7 +35,7 @@ module sbox_registers_lut
   ////////////////////////////////
 
   always_comb begin
-    for (int i = 0; i < 63; i++) begin
+    for (int i = 0; i < 64; i++) begin
       
       addr_sbox_row[i] = addr_i[i][4:2];
       addr_sbox_col[i] = addr_i[i][1:0];

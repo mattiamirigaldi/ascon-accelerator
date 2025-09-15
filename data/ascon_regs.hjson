@@ -1,32 +1,46 @@
-{ name: "ascon",
+{
+  name: "ascon",
   clock_primary: "clk_i",
   bus_interfaces: [
     { protocol: "reg_iface", direction: "device" }
   ],
   registers: [
 
-    { name: "STATUS",
-      desc: "Start/Finished bit set by SW and by ASCON",
-      swaccess: "rw",
-      hwaccess: "hrw",
+    {
+      name: "STATUS",
+      desc: "Start (bit0) from SW; Done (bit1) from HW",
+      resval: "0",
+      hwqe: "true",        // generate also .qe 
       fields: [
-      { bits: "0:0"
-      }
-      ],
+        {
+          bits: "0",
+          name: "START",
+          desc: "Write 1 to start operation (strobe).",
+          swaccess: "wo",     // SW write-only; generates reg2hw START.q / START.qe
+          hwaccess: "hro"
+        },
+        {
+          bits: "1",
+          name: "DONE",
+          desc: "Set by HW at end of operation; cleared on SW read.",
+          swaccess: "rc",     // read-clear on SW read
+          hwaccess: "hwo"     // HW writes this bit via hw2reg
+        }
+      ]
     },
 
-    { multireg:
-        { name: "STATE",
+    {
+      multireg: {
+        name: "STATE",
         desc: "I/O state for Ascon",
-        count : "10",
+        count: "10",
         cname: "STATE",
         swaccess: "rw",
         hwaccess: "hrw",
         fields: [
-        { bits: "31:0"
-        }
-        ],
-        }
-    },
+          { bits: "31:0" }
+        ]
+      }
+    }
   ]
 }

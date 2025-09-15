@@ -34,18 +34,22 @@ module ascon_regs
   ////////////////////////////////
   //       Status signals       //
   ////////////////////////////////
+// START at bit 0 (wo), DONE at bit 1 (rc/hwo)
 
   always_comb begin
-    start_o = reg2hw.status.q;
-    hw2reg.status.d = 1'b1;
-    hw2reg.status.de = finished_i;
+    // Kick-off pulse when SW writes 1 to START
+    start_o = reg2hw.status.start.qe & reg2hw.status.start.q;
+
+    // Latch DONE=1 when hardware finishes; SW read will auto-clear (rc)
+    hw2reg.status.done.de = finished_i; // write-enable from HW
+    hw2reg.status.done.d  = 1'b1;       // value HW writes
   end
 
   ////////////////////////////////
   //        ASCON State         //
   ////////////////////////////////
   always_comb begin
-    // Read registers and provide the intial state to ASCON 
+    // Read registers and provide the intial state to ASCON
     for (int i = 0; i < 10; i = i + 2) begin
       state_o[i>>1][31:0]  = reg2hw.state[i].q;
       state_o[i>>1][63:32] = reg2hw.state[i+1].q;

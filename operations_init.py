@@ -1,3 +1,6 @@
+from logging import DEBUG
+
+
 def ascon_init(key, nonce, variant="Ascon-128", mode="hw"): 
 
     assert variant in ["Ascon-128", "Ascon-128a", "Ascon-80pq"]
@@ -13,23 +16,37 @@ def ascon_init(key, nonce, variant="Ascon-128", mode="hw"):
 
     return state
 
-def ascon_initialize(S, k, rate, a, b, key, nonce, mode):
+def ascon_initialize(S, k, rate, a, b, key, nonce, mode, DEBUG=False):
 
     state = to_bytes([])
     intermediate_state = to_bytes([])
-    iv_zero_key_nonce = to_bytes([k, rate * 8, a, b]) + zero_bytes(20-len(key)) + key + nonce
+    iv = 0x0000000080400c06
+    # Build the IV||0^n||key||nonce byte string. iv is an integer, so convert to bytes first.
+    iv_bytes = int_to_bytes(iv, 8)
+    # Alternatively the original header form can be used:
+    # header = to_bytes([k, rate * 8, a, b])
+    # iv_zero_key_nonce = header + zero_bytes(20 - len(key)) + key + nonce
+    iv_zero_key_nonce = iv_bytes + key + nonce
     S[0], S[1], S[2], S[3], S[4] = bytes_to_state(iv_zero_key_nonce)
 
     # Print initial state in hexadecimal
-    print("Initial state:")
-    print(f"S[0] = 0x{S[0]:016x}")
-    print(f"S[1] = 0x{S[1]:016x}")
-    print(f"S[2] = 0x{S[2]:016x}")
-    print(f"S[3] = 0x{S[3]:016x}")
-    print(f"S[4] = 0x{S[4]:016x}")
+    if DEBUG:
+        print("Initial state:")
+        print(f"S[0] = 0x{S[0]:016x}")
+        print(f"S[1] = 0x{S[1]:016x}")
+        print(f"S[2] = 0x{S[2]:016x}")
+        print(f"S[3] = 0x{S[3]:016x}")
+        print(f"S[4] = 0x{S[4]:016x}")
 
     for i in range(0,a):
         permutation(S, i, mode)
+        if DEBUG:
+            print(f"After permutation {i+1}:")
+            print(f"S[0] = 0x{S[0]:016x}")
+            print(f"S[1] = 0x{S[1]:016x}")
+            print(f"S[2] = 0x{S[2]:016x}")
+            print(f"S[3] = 0x{S[3]:016x}")  
+            print(f"S[4] = 0x{S[4]:016x}")
 
     state += int_to_bytes(S[0], 8) + int_to_bytes(S[1], 8) + int_to_bytes(S[2], 8) + int_to_bytes(S[3], 8) + int_to_bytes(S[4], 8) 
 
@@ -38,7 +55,11 @@ def ascon_initialize(S, k, rate, a, b, key, nonce, mode):
 
 def permutation(S, r, mode="hw"):
     # --- constant addition ---
-    S[2] ^= (0xf0 - r*0x10 + r*0x1)
+    round_const = 0xf0 - r*0x10 + r*0x1
+    S[2] ^= round_const
+
+    print(f"After constant addition in round {r+1}:")
+    print(f"S[2] = 0x{S[2]:016x}")
     # --- substitution layer ---
     if mode == "hw" :
         S[0] ^= S[4]
@@ -56,12 +77,27 @@ def permutation(S, r, mode="hw"):
     else:
         print("Error")
     
+    if DEBUG:
+        print(f"After substitution layer in round {r+1}:")
+        print(f"S[0] = 0x{S[0]:016x}")
+        print(f"S[1] = 0x{S[1]:016x}")
+        print(f"S[2] = 0x{S[2]:016x}")
+        print(f"S[3] = 0x{S[3]:016x}")
+        print(f"S[4] = 0x{S[4]:016x}")
+    
     # --- linear diffusion layer ---
     S[0] ^= rotr(S[0], 19) ^ rotr(S[0], 28)
     S[1] ^= rotr(S[1], 61) ^ rotr(S[1], 39)
     S[2] ^= rotr(S[2],  1) ^ rotr(S[2],  6)
     S[3] ^= rotr(S[3], 10) ^ rotr(S[3], 17)
     S[4] ^= rotr(S[4],  7) ^ rotr(S[4], 41)
+    if DEBUG:
+        print(f"After linear diffusion layer in round {r+1}:")
+        print(f"S[0] = 0x{S[0]:016x}")
+        print(f"S[1] = 0x{S[1]:016x}")
+        print(f"S[2] = 0x{S[2]:016x}")
+        print(f"S[3] = 0x{S[3]:016x}")
+        print(f"S[4] = 0x{S[4]:016x}")
 
 def substitution_layer(S, sbox_type):
     S0_bin_out = []

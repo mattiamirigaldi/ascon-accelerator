@@ -8,44 +8,44 @@
 `include "common_cells/assertions.svh"
 
 module ascon_reg_top #(
-    parameter type reg_req_t = logic,
-    parameter type reg_rsp_t = logic,
-    parameter int AW = 6
+  parameter type reg_req_t = logic,
+  parameter type reg_rsp_t = logic,
+  parameter int AW = 6
 ) (
-    input logic clk_i,
-    input logic rst_ni,
-    input reg_req_t reg_req_i,
-    output reg_rsp_t reg_rsp_o,
-    // To HW
-    output ascon_reg_pkg::ascon_reg2hw_t reg2hw,  // Write
-    input ascon_reg_pkg::ascon_hw2reg_t hw2reg,  // Read
+  input logic clk_i,
+  input logic rst_ni,
+  input  reg_req_t reg_req_i,
+  output reg_rsp_t reg_rsp_o,
+  // To HW
+  output ascon_reg_pkg::ascon_reg2hw_t reg2hw, // Write
+  input  ascon_reg_pkg::ascon_hw2reg_t hw2reg, // Read
 
 
-    // Config
-    input devmode_i  // If 1, explicit error return for unmapped register access
+  // Config
+  input devmode_i // If 1, explicit error return for unmapped register access
 );
 
-  import ascon_reg_pkg::*;
+  import ascon_reg_pkg::* ;
 
   localparam int DW = 32;
-  localparam int DBW = DW / 8;  // Byte Width
+  localparam int DBW = DW/8;                    // Byte Width
 
   // register signals
-  logic               reg_we;
-  logic               reg_re;
-  logic [BlockAw-1:0] reg_addr;
-  logic [     DW-1:0] reg_wdata;
-  logic [    DBW-1:0] reg_be;
-  logic [     DW-1:0] reg_rdata;
-  logic               reg_error;
+  logic           reg_we;
+  logic           reg_re;
+  logic [BlockAw-1:0]  reg_addr;
+  logic [DW-1:0]  reg_wdata;
+  logic [DBW-1:0] reg_be;
+  logic [DW-1:0]  reg_rdata;
+  logic           reg_error;
 
-  logic addrmiss, wr_err;
+  logic          addrmiss, wr_err;
 
   logic [DW-1:0] reg_rdata_next;
 
   // Below register interface can be changed
-  reg_req_t reg_intf_req;
-  reg_rsp_t reg_intf_rsp;
+  reg_req_t  reg_intf_req;
+  reg_rsp_t  reg_intf_rsp;
 
 
   assign reg_intf_req = reg_req_i;
@@ -61,16 +61,18 @@ module ascon_reg_top #(
   assign reg_intf_rsp.error = reg_error;
   assign reg_intf_rsp.ready = 1'b1;
 
-  assign reg_rdata = reg_rdata_next;
+  assign reg_rdata = reg_rdata_next ;
   assign reg_error = (devmode_i & addrmiss) | wr_err;
 
 
   // Define SW related signals
   // Format: <reg>_<field>_{wd|we|qs}
   //        or <reg>_{wd|we|qs} if field == 1 or 0
-  logic status_qs;
-  logic status_wd;
-  logic status_we;
+  logic status_start_wd;
+  logic status_start_we;
+  logic status_done_qs;
+  logic status_done_wd;
+  logic status_done_we;
   logic [31:0] state_0_qs;
   logic [31:0] state_0_wd;
   logic state_0_we;
@@ -105,28 +107,54 @@ module ascon_reg_top #(
   // Register instances
   // R[status]: V(False)
 
+  //   F[start]: 0:0
   prim_subreg #(
-      .DW      (1),
-      .SWACCESS("RW"),
-      .RESVAL  (1'h0)
-  ) u_status (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .DW      (1),
+    .SWACCESS("WO"),
+    .RESVAL  (1'h0)
+  ) u_status_start (
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(status_we),
-      .wd(status_wd),
+    // from register interface
+    .we     (status_start_we),
+    .wd     (status_start_wd),
 
-      // from internal hardware
-      .de(hw2reg.status.de),
-      .d (hw2reg.status.d),
+    // from internal hardware
+    .de     (1'b0),
+    .d      ('0  ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.status.q),
+    // to internal hardware
+    .qe     (reg2hw.status.start.qe),
+    .q      (reg2hw.status.start.q ),
 
-      // to register interface (read)
-      .qs(status_qs)
+    .qs     ()
+  );
+
+
+  //   F[done]: 1:1
+  prim_subreg #(
+    .DW      (1),
+    .SWACCESS("RC"),
+    .RESVAL  (1'h0)
+  ) u_status_done (
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
+
+    // from register interface
+    .we     (status_done_we),
+    .wd     (status_done_wd),
+
+    // from internal hardware
+    .de     (hw2reg.status.done.de),
+    .d      (hw2reg.status.done.d ),
+
+    // to internal hardware
+    .qe     (),
+    .q      (),
+
+    // to register interface (read)
+    .qs     (status_done_qs)
   );
 
 
@@ -135,270 +163,270 @@ module ascon_reg_top #(
   // R[state_0]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_0 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_0_we),
-      .wd(state_0_wd),
+    // from register interface
+    .we     (state_0_we),
+    .wd     (state_0_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[0].de),
-      .d (hw2reg.state[0].d),
+    // from internal hardware
+    .de     (hw2reg.state[0].de),
+    .d      (hw2reg.state[0].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[0].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[0].q ),
 
-      // to register interface (read)
-      .qs(state_0_qs)
+    // to register interface (read)
+    .qs     (state_0_qs)
   );
 
   // Subregister 1 of Multireg state
   // R[state_1]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_1 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_1_we),
-      .wd(state_1_wd),
+    // from register interface
+    .we     (state_1_we),
+    .wd     (state_1_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[1].de),
-      .d (hw2reg.state[1].d),
+    // from internal hardware
+    .de     (hw2reg.state[1].de),
+    .d      (hw2reg.state[1].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[1].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[1].q ),
 
-      // to register interface (read)
-      .qs(state_1_qs)
+    // to register interface (read)
+    .qs     (state_1_qs)
   );
 
   // Subregister 2 of Multireg state
   // R[state_2]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_2 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_2_we),
-      .wd(state_2_wd),
+    // from register interface
+    .we     (state_2_we),
+    .wd     (state_2_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[2].de),
-      .d (hw2reg.state[2].d),
+    // from internal hardware
+    .de     (hw2reg.state[2].de),
+    .d      (hw2reg.state[2].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[2].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[2].q ),
 
-      // to register interface (read)
-      .qs(state_2_qs)
+    // to register interface (read)
+    .qs     (state_2_qs)
   );
 
   // Subregister 3 of Multireg state
   // R[state_3]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_3 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_3_we),
-      .wd(state_3_wd),
+    // from register interface
+    .we     (state_3_we),
+    .wd     (state_3_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[3].de),
-      .d (hw2reg.state[3].d),
+    // from internal hardware
+    .de     (hw2reg.state[3].de),
+    .d      (hw2reg.state[3].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[3].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[3].q ),
 
-      // to register interface (read)
-      .qs(state_3_qs)
+    // to register interface (read)
+    .qs     (state_3_qs)
   );
 
   // Subregister 4 of Multireg state
   // R[state_4]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_4 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_4_we),
-      .wd(state_4_wd),
+    // from register interface
+    .we     (state_4_we),
+    .wd     (state_4_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[4].de),
-      .d (hw2reg.state[4].d),
+    // from internal hardware
+    .de     (hw2reg.state[4].de),
+    .d      (hw2reg.state[4].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[4].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[4].q ),
 
-      // to register interface (read)
-      .qs(state_4_qs)
+    // to register interface (read)
+    .qs     (state_4_qs)
   );
 
   // Subregister 5 of Multireg state
   // R[state_5]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_5 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_5_we),
-      .wd(state_5_wd),
+    // from register interface
+    .we     (state_5_we),
+    .wd     (state_5_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[5].de),
-      .d (hw2reg.state[5].d),
+    // from internal hardware
+    .de     (hw2reg.state[5].de),
+    .d      (hw2reg.state[5].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[5].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[5].q ),
 
-      // to register interface (read)
-      .qs(state_5_qs)
+    // to register interface (read)
+    .qs     (state_5_qs)
   );
 
   // Subregister 6 of Multireg state
   // R[state_6]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_6 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_6_we),
-      .wd(state_6_wd),
+    // from register interface
+    .we     (state_6_we),
+    .wd     (state_6_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[6].de),
-      .d (hw2reg.state[6].d),
+    // from internal hardware
+    .de     (hw2reg.state[6].de),
+    .d      (hw2reg.state[6].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[6].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[6].q ),
 
-      // to register interface (read)
-      .qs(state_6_qs)
+    // to register interface (read)
+    .qs     (state_6_qs)
   );
 
   // Subregister 7 of Multireg state
   // R[state_7]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_7 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_7_we),
-      .wd(state_7_wd),
+    // from register interface
+    .we     (state_7_we),
+    .wd     (state_7_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[7].de),
-      .d (hw2reg.state[7].d),
+    // from internal hardware
+    .de     (hw2reg.state[7].de),
+    .d      (hw2reg.state[7].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[7].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[7].q ),
 
-      // to register interface (read)
-      .qs(state_7_qs)
+    // to register interface (read)
+    .qs     (state_7_qs)
   );
 
   // Subregister 8 of Multireg state
   // R[state_8]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_8 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_8_we),
-      .wd(state_8_wd),
+    // from register interface
+    .we     (state_8_we),
+    .wd     (state_8_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[8].de),
-      .d (hw2reg.state[8].d),
+    // from internal hardware
+    .de     (hw2reg.state[8].de),
+    .d      (hw2reg.state[8].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[8].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[8].q ),
 
-      // to register interface (read)
-      .qs(state_8_qs)
+    // to register interface (read)
+    .qs     (state_8_qs)
   );
 
   // Subregister 9 of Multireg state
   // R[state_9]: V(False)
 
   prim_subreg #(
-      .DW      (32),
-      .SWACCESS("RW"),
-      .RESVAL  (32'h0)
+    .DW      (32),
+    .SWACCESS("RW"),
+    .RESVAL  (32'h0)
   ) u_state_9 (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
+    .clk_i   (clk_i    ),
+    .rst_ni  (rst_ni  ),
 
-      // from register interface
-      .we(state_9_we),
-      .wd(state_9_wd),
+    // from register interface
+    .we     (state_9_we),
+    .wd     (state_9_wd),
 
-      // from internal hardware
-      .de(hw2reg.state[9].de),
-      .d (hw2reg.state[9].d),
+    // from internal hardware
+    .de     (hw2reg.state[9].de),
+    .d      (hw2reg.state[9].d ),
 
-      // to internal hardware
-      .qe(),
-      .q (reg2hw.state[9].q),
+    // to internal hardware
+    .qe     (),
+    .q      (reg2hw.state[9].q ),
 
-      // to register interface (read)
-      .qs(state_9_qs)
+    // to register interface (read)
+    .qs     (state_9_qs)
   );
 
 
@@ -407,20 +435,20 @@ module ascon_reg_top #(
   logic [10:0] addr_hit;
   always_comb begin
     addr_hit = '0;
-    addr_hit[0] = (reg_addr == ASCON_STATUS_OFFSET);
-    addr_hit[1] = (reg_addr == ASCON_STATE_0_OFFSET);
-    addr_hit[2] = (reg_addr == ASCON_STATE_1_OFFSET);
-    addr_hit[3] = (reg_addr == ASCON_STATE_2_OFFSET);
-    addr_hit[4] = (reg_addr == ASCON_STATE_3_OFFSET);
-    addr_hit[5] = (reg_addr == ASCON_STATE_4_OFFSET);
-    addr_hit[6] = (reg_addr == ASCON_STATE_5_OFFSET);
-    addr_hit[7] = (reg_addr == ASCON_STATE_6_OFFSET);
-    addr_hit[8] = (reg_addr == ASCON_STATE_7_OFFSET);
-    addr_hit[9] = (reg_addr == ASCON_STATE_8_OFFSET);
+    addr_hit[ 0] = (reg_addr == ASCON_STATUS_OFFSET);
+    addr_hit[ 1] = (reg_addr == ASCON_STATE_0_OFFSET);
+    addr_hit[ 2] = (reg_addr == ASCON_STATE_1_OFFSET);
+    addr_hit[ 3] = (reg_addr == ASCON_STATE_2_OFFSET);
+    addr_hit[ 4] = (reg_addr == ASCON_STATE_3_OFFSET);
+    addr_hit[ 5] = (reg_addr == ASCON_STATE_4_OFFSET);
+    addr_hit[ 6] = (reg_addr == ASCON_STATE_5_OFFSET);
+    addr_hit[ 7] = (reg_addr == ASCON_STATE_6_OFFSET);
+    addr_hit[ 8] = (reg_addr == ASCON_STATE_7_OFFSET);
+    addr_hit[ 9] = (reg_addr == ASCON_STATE_8_OFFSET);
     addr_hit[10] = (reg_addr == ASCON_STATE_9_OFFSET);
   end
 
-  assign addrmiss = (reg_re || reg_we) ? ~|addr_hit : 1'b0;
+  assign addrmiss = (reg_re || reg_we) ? ~|addr_hit : 1'b0 ;
 
   // Check sub-word write is permitted
   always_comb begin
@@ -438,8 +466,11 @@ module ascon_reg_top #(
                (addr_hit[10] & (|(ASCON_PERMIT[10] & ~reg_be)))));
   end
 
-  assign status_we  = addr_hit[0] & reg_we & !reg_error;
-  assign status_wd  = reg_wdata[0];
+  assign status_start_we = addr_hit[0] & reg_we & !reg_error;
+  assign status_start_wd = reg_wdata[0];
+
+  assign status_done_we = addr_hit[0] & reg_re & !reg_error;
+  assign status_done_wd = '1;
 
   assign state_0_we = addr_hit[1] & reg_we & !reg_error;
   assign state_0_wd = reg_wdata[31:0];
@@ -476,7 +507,8 @@ module ascon_reg_top #(
     reg_rdata_next = '0;
     unique case (1'b1)
       addr_hit[0]: begin
-        reg_rdata_next[0] = status_qs;
+        reg_rdata_next[0] = '0;
+        reg_rdata_next[1] = status_done_qs;
       end
 
       addr_hit[1]: begin
@@ -539,23 +571,24 @@ module ascon_reg_top #(
 
 endmodule
 
-module ascon_reg_top_intf #(
-    parameter  int AW = 6,
-    localparam int DW = 32
+module ascon_reg_top_intf
+#(
+  parameter int AW = 6,
+  localparam int DW = 32
 ) (
-    input logic clk_i,
-    input logic rst_ni,
-    REG_BUS.in regbus_slave,
-    // To HW
-    output ascon_reg_pkg::ascon_reg2hw_t reg2hw,  // Write
-    input ascon_reg_pkg::ascon_hw2reg_t hw2reg,  // Read
-    // Config
-    input devmode_i  // If 1, explicit error return for unmapped register access
+  input logic clk_i,
+  input logic rst_ni,
+  REG_BUS.in  regbus_slave,
+  // To HW
+  output ascon_reg_pkg::ascon_reg2hw_t reg2hw, // Write
+  input  ascon_reg_pkg::ascon_hw2reg_t hw2reg, // Read
+  // Config
+  input devmode_i // If 1, explicit error return for unmapped register access
 );
-  localparam int unsigned STRB_WIDTH = DW / 8;
+ localparam int unsigned STRB_WIDTH = DW/8;
 
-  `include "register_interface/typedef.svh"
-  `include "register_interface/assign.svh"
+`include "register_interface/typedef.svh"
+`include "register_interface/assign.svh"
 
   // Define structs for reg_bus
   typedef logic [AW-1:0] addr_t;
@@ -565,27 +598,27 @@ module ascon_reg_top_intf #(
 
   reg_bus_req_t s_reg_req;
   reg_bus_rsp_t s_reg_rsp;
-
+  
   // Assign SV interface to structs
   `REG_BUS_ASSIGN_TO_REQ(s_reg_req, regbus_slave)
   `REG_BUS_ASSIGN_FROM_RSP(regbus_slave, s_reg_rsp)
 
-
+  
 
   ascon_reg_top #(
-      .reg_req_t(reg_bus_req_t),
-      .reg_rsp_t(reg_bus_rsp_t),
-      .AW(AW)
+    .reg_req_t(reg_bus_req_t),
+    .reg_rsp_t(reg_bus_rsp_t),
+    .AW(AW)
   ) i_regs (
-      .clk_i,
-      .rst_ni,
-      .reg_req_i(s_reg_req),
-      .reg_rsp_o(s_reg_rsp),
-      .reg2hw,  // Write
-      .hw2reg,  // Read
-      .devmode_i
+    .clk_i,
+    .rst_ni,
+    .reg_req_i(s_reg_req),
+    .reg_rsp_o(s_reg_rsp),
+    .reg2hw, // Write
+    .hw2reg, // Read
+    .devmode_i
   );
-
+  
 endmodule
 
 
